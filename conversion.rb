@@ -41,10 +41,26 @@ class Conversion
     #Break array phone_keys in 2 arrays with minimum size 3
     length = phone_number.length
     i = 2
+    
+    correct_words = []
     while i < length - 3  do # loop will run till i = 6
-      array1 = phone_keys[0..i] # array1 min length 3, max length 7
-      array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9]
+      phone_chars_array1 = phone_keys[0..i] # array1 min length 3, max length 7
+      phone_chars_array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9] #last loop with [6..9]
+      
+      # Now combile characters and create possible words.
+      possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
+      possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
+      
+      p "match word..."
+      # Match / Intersection of possible words with @dictionary array
+      p match_word1 = possible_words_array1 & @dictionary
+      p match_word2 = possible_words_array2 & @dictionary
+      
+      correct_words << [match_word1, match_word2] if !match_word1.empty? && !match_word2.empty?
+      p "correct_words - "
+      p correct_words
       binding.pry if i < 4
+      i += 1
     end
     binding.pry
   end
