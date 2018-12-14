@@ -24,17 +24,19 @@ class Conversion
   def valid_phone_number?
     return false if phone_number.nil?
 
-    phone_number.gsub!(/[^2-9]/, '') # select digits only 2 to 9. Ignore 0 and 1
-    return true if phone_number.length == 10
+    @phone_number = phone_number.gsub(/[^2-9]/, '') # select digits only 2 to 9. Ignore 0 and 1
+    return true if @phone_number.length == 10
   end
 
   def get_correct_words(phone_chars_array)
     matches = []
     phone_chars_array.each do |phone_chars|
+      
       # Now combine characters and create possible words.
       possible_words = phone_chars.shift.product(*phone_chars).map(&:join)
       # Match / Intersection of possible words with @dictionary array
-      matches << possible_words & @dictionary
+      matches << (possible_words & @dictionary)
+      #binding.pry
     end
 
     unless matches.any?(&:empty?)
@@ -42,7 +44,7 @@ class Conversion
       if matches.size == 2
         @correct_words += matches[0].product(matches[1])
       elsif matches.size == 3
-        @correct_words += matches[0].product(matches[1]).product(matches[2])
+        @correct_words += matches[0].product(matches[1]).product(matches[2]).map(&:flatten)
       end
     end
   end
@@ -63,9 +65,9 @@ class Conversion
 
   # Break array phone_keys in 2 arrays with minimum size 3
   def extract_words
-    length = phone_number.length
+    length = @phone_number.length
     i = 2
-    @phone_keys = phone_number.chars.map { |n| @digit_to_chars[n] }
+    @phone_keys = @phone_number.chars.map { |n| @digit_to_chars[n] }
 
     while i < length - 3 do # loop will run till i = 6
       phone_chars1 = @phone_keys[0..i]
@@ -75,23 +77,27 @@ class Conversion
     end
   end
 
-  def multiple_combinations
-    # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
-    get_correct_words([@phone_keys[0..2], @phone_keys[3..5], @phone_keys[6..9]])
-    get_correct_words([@phone_keys[0..2], @phone_keys[3..6], @phone_keys[7..9]])
-    get_correct_words([@phone_keys[0..3], @phone_keys[4..6], @phone_keys[7..9]])
-  end
-
-  def all_words
+  def number_to_words_combinations
     return unless valid_phone_number?
 
     parse_dictionary
     extract_words
-    multiple_combinations
     @correct_words << (@phone_keys.shift.product(*@phone_keys).map(&:join) & @dictionary).join(', ')
     @correct_words.uniq!
+    return @correct_words
+  end
+  
+  def number_to_multiple_combinations
+    number_to_words_combinations
+    # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
+    get_correct_words([@phone_keys[0..2], @phone_keys[3..5], @phone_keys[6..9]])
+    get_correct_words([@phone_keys[0..2], @phone_keys[3..6], @phone_keys[7..9]])
+    get_correct_words([@phone_keys[0..3], @phone_keys[4..6], @phone_keys[7..9]])
+    return @correct_words
   end
 end
 
 object = Conversion.new('6686787825')
-object.extract_words
+p object.number_to_words_combinations
+p "3 words combinations =================="
+p object.number_to_multiple_combinations
