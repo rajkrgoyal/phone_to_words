@@ -28,36 +28,25 @@ class Conversion
     return true if phone_number.length == 10
   end
 
-  def get_correct_words(phone_chars1, phone_chars2)
-    # Now combile characters and create possible words.
-    possible_words1 = phone_chars1.shift.product(*phone_chars1).map(&:join)
-    possible_words2 = phone_chars2.shift.product(*phone_chars2).map(&:join)
+  def get_correct_words(phone_chars_array)
+    matches = []
+    phone_chars_array.each do |phone_chars|
+      # Now combine characters and create possible words.
+      possible_words = phone_chars.shift.product(*phone_chars).map(&:join)
+      # Match / Intersection of possible words with @dictionary array
+      matches << possible_words & @dictionary
+    end
 
-    # Match / Intersection of possible words with @dictionary array
-    match1 = possible_words1 & @dictionary
-    match2 = possible_words2 & @dictionary
-
-    # Making combinations from above output
-    @correct_words += match1.product(match2) if !match1.empty? && !match2.empty?
-  end
-
-  def more_correct_words(phone_chars1, phone_chars2, phone_chars3)
-    # Now combile characters and create possible words.
-    possible_words1 = phone_chars1.shift.product(*phone_chars1).map(&:join)
-    possible_words2 = phone_chars2.shift.product(*phone_chars2).map(&:join)
-    possible_words3 = phone_chars3.shift.product(*phone_chars3).map(&:join)
-
-    # Match / Intersection of possible words with @dictionary array
-    match1 = possible_words1 & @dictionary
-    match2 = possible_words2 & @dictionary
-    match3 = possible_words3 & @dictionary
-
-    # Making combinations from above output
-    if(!match1.empty? && !match2.empty? && !match3.empty?)
-      @correct_words += match1.product(match2).product(match3).map(&:flatten)
+    unless matches.any?(&:empty?)
+      # Making combinations from above output
+      if matches.size == 2
+        @correct_words += matches[0].product(matches[1])
+      elsif matches.size == 3
+        @correct_words += matches[0].product(matches[1]).product(matches[2])
+      end
     end
   end
-  
+
   def parse_dictionary
     @dictionary = []
     File.foreach('dictionary.txt') do |word|
@@ -73,32 +62,33 @@ class Conversion
   # These words need to intersect with dictionary words
 
   # Break array phone_keys in 2 arrays with minimum size 3
-
   def extract_words
+    length = phone_number.length
+    i = 2
+    @phone_keys = phone_number.chars.map { |n| @digit_to_chars[n] }
+
+    while i < length - 3 do # loop will run till i = 6
+      phone_chars1 = @phone_keys[0..i]
+      phone_chars2 = @phone_keys[(i + 1)..(length - 1)]
+      get_correct_words([phone_chars1, phone_chars2])
+      i += 1
+    end
+  end
+
+  def multiple_combinations
+    # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
+    get_correct_words([@phone_keys[0..2], @phone_keys[3..5], @phone_keys[6..9]])
+    get_correct_words([@phone_keys[0..2], @phone_keys[3..6], @phone_keys[7..9]])
+    get_correct_words([@phone_keys[0..3], @phone_keys[4..6], @phone_keys[7..9]])
+  end
+
+  def all_words
     return unless valid_phone_number?
 
     parse_dictionary
-    phone_keys = phone_number.chars.map{ |n| @digit_to_chars[n] }
-    length = phone_number.length
-    i = 2
-
-    while i < length - 3 do # loop will run till i = 6
-      phone_chars1 = phone_keys[0..i]
-      phone_chars2 = phone_keys[(i + 1)..(length - 1)]
-      get_correct_words(phone_chars1, phone_chars2)
-      i += 1
-    end
-    # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
-    # 3+3+4
-    more_correct_words(phone_keys[0..2], phone_keys[3..5], phone_keys[6..9])
-
-    # 3+4+3
-    more_correct_words(phone_keys[0..2], phone_keys[3..6], phone_keys[7..9])
-
-    # 4+3+3
-    more_correct_words(phone_keys[0..3], phone_keys[4..6], phone_keys[7..9])
-    
-    @correct_words << (phone_keys.shift.product(*phone_keys).map(&:join) & @dictionary).join(', ')
+    extract_words
+    multiple_combinations
+    @correct_words << (@phone_keys.shift.product(*@phone_keys).map(&:join) & @dictionary).join(', ')
     @correct_words.uniq!
   end
 end
