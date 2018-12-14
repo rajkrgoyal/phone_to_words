@@ -28,47 +28,44 @@ class Conversion
     return false if phone_number.nil?
 
     phone_number.gsub!(/[^2-9]/, '') # select digits only 2 to 9. Ignore 0 and 1
-    p phone_number
-    p phone_number.length
     return true if phone_number.length == 10
   end
   
   def get_correct_words(phone_chars_array1, phone_chars_array2)
     # Now combile characters and create possible words.
-      possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
-      possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
-      
-      p "match word..."
-      # Match / Intersection of possible words with @dictionary array
-      p match_word1 = possible_words_array1 & @dictionary
-      p match_word2 = possible_words_array2 & @dictionary
-      
-      # Output was like... [[["NOUN", "ONTO"], ["STRUCK"]], [["MOTOR", "NOUNS"], ["TRUCK", "USUAL"]]]
-      # Making combinations from above output
-      if !match_word1.empty? && !match_word2.empty?
-        @correct_words += match_word1.product(match_word2)
-      end
+    possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
+    possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
+
+    # Match / Intersection of possible words with @dictionary array
+    match_word1 = possible_words_array1 & @dictionary
+    match_word2 = possible_words_array2 & @dictionary
+
+    # Output was like... [[["NOUN", "ONTO"], ["STRUCK"]], [["MOTOR", "NOUNS"], ["TRUCK", "USUAL"]]]
+    # Making combinations from above output
+    if !match_word1.empty? && !match_word2.empty?
+      @correct_words += match_word1.product(match_word2)
+    end
   end
   
   def get_correct_words_multi_array(phone_chars_array1, phone_chars_array2, phone_chars_array3)
     # Now combile characters and create possible words.
-      possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
-      possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
-      possible_words_array3 = phone_chars_array3.shift.product(*phone_chars_array3).map(&:join)
-      
-      p "match word with 3 arrays..."
-      # Match / Intersection of possible words with @dictionary array
-      p match_word1 = possible_words_array1 & @dictionary
-      p match_word2 = possible_words_array2 & @dictionary
-      p match_word3 = possible_words_array3 & @dictionary
-      
-      # Making combinations from above output
-      if !match_word1.empty? && !match_word2.empty? && !match_word3.empty?
-        @correct_words += match_word1.product(match_word2).product(match_word3).map(&:flatten)
-      end
+    possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
+    possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
+    possible_words_array3 = phone_chars_array3.shift.product(*phone_chars_array3).map(&:join)
+    
+    # Match / Intersection of possible words with @dictionary array
+    match_word1 = possible_words_array1 & @dictionary
+    match_word2 = possible_words_array2 & @dictionary
+    match_word3 = possible_words_array3 & @dictionary
+    
+    # Making combinations from above output
+    if !match_word1.empty? && !match_word2.empty? && !match_word3.empty?
+      @correct_words += match_word1.product(match_word2).product(match_word3).map(&:flatten)
+    end
   end
   
   def extract_words
+    return unless valid_phone_number?
     phone_keys = phone_number.chars.map{|n| @digit_to_chars[n] }
     # Word minimum length should be 3
     # Here is how we can breack phone number characters
@@ -81,39 +78,31 @@ class Conversion
     # Break array phone_keys in 2 arrays with minimum size 3
     length = phone_number.length
     i = 2
-    
+
     while i < length - 3  do # loop will run till i = 6
       phone_chars_array1 = phone_keys[0..i] # array1 min length 3, max length 7
       phone_chars_array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9] #last loop with [6..9]
-      
+
       get_correct_words(phone_chars_array1, phone_chars_array2)
-      p "correct_words - "
-      p @correct_words
-      #binding.pry if i < 4
+
       i += 1
     end
-    p @correct_words
-    #binding.pry
     # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
     # 3+3+4
     get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..5], phone_keys[6..9])
-    #binding.pry
+
     # 3+4+3
     get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..6], phone_keys[7..9])
-    #binding.pry
+
     # 4+3+3
     get_correct_words_multi_array(phone_keys[0..3], phone_keys[4..6], phone_keys[7..9])
     
     @correct_words << (phone_keys.shift.product(*phone_keys).map(&:join) & @dictionary).join(", ")
-    
-    p @correct_words
-    p "============="
-    p @correct_words.uniq!
-    #binding.pry
+    @correct_words.uniq!
+
   end
 end
+
 object = Conversion.new('6686787825')
-p 'is valid phone number?'
-p object.valid_phone_number?
 object.extract_words
 
