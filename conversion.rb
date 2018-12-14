@@ -64,7 +64,7 @@ class Conversion
       
       # Making combinations from above output
       if !match_word1.empty? && !match_word2.empty? && !match_word3.empty?
-        @correct_words += match_word1.product(match_word2).product(match_word3)
+        @correct_words += match_word1.product(match_word2).product(match_word3).map(&:flatten)
       end
   end
   
@@ -73,7 +73,7 @@ class Conversion
     # Word minimum length should be 3
     # Here is how we can breack phone number characters
     # 3+7, 4+6, 5+5, 6+4, 7+3, 10, 3+3+4, 3+4+3, 4+3+3
-    # For length 10
+    
     
     # Now create combinations of words with 3 to 7 characters
     # These words need to intersect with dictionary words
@@ -93,20 +93,23 @@ class Conversion
       i += 1
     end
     p @correct_words
-    binding.pry
+    #binding.pry
     # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
     # 3+3+4
     get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..5], phone_keys[6..9])
-    binding.pry
+    #binding.pry
     # 3+4+3
     get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..6], phone_keys[7..9])
-    binding.pry
+    #binding.pry
     # 4+3+3
     get_correct_words_multi_array(phone_keys[0..3], phone_keys[4..6], phone_keys[7..9])
+    
+    @correct_words << (phone_keys.shift.product(*phone_keys).map(&:join) & @dictionary).join(", ")
+    
     p @correct_words
     p "============="
     p @correct_words.uniq!
-    binding.pry
+    #binding.pry
   end
 end
 object = Conversion.new('6686787825')
