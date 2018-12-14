@@ -8,17 +8,17 @@ class Conversion
 
   def initialize(phone_number)
     @phone_number = phone_number
-    @digit_to_chars = { '2' => %w[a b c],
-                        '3' => %w[d e f],
-                        '4' => %w[g h i],
-                        '5' => %w[j k l],
-                        '6' => %w[m n o],
-                        '7' => %w[p q r s],
-                        '8' => %w[t u v],
-                        '9' => %w[w x y z] }
-    dictionary = []
+    @digit_to_chars = { '2' => %w[A B C],
+                        '3' => %w[D E F],
+                        '4' => %w[G H I],
+                        '5' => %w[J K L],
+                        '6' => %w[M N O],
+                        '7' => %w[P Q R S],
+                        '8' => %w[T U V],
+                        '9' => %w[W X Y Z] }
+    @dictionary = []
     File.foreach( "dictionary.txt" ) do |word|
-      dictionary << word.strip
+      @dictionary << word.strip
     end
   end
 
