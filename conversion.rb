@@ -34,6 +34,18 @@ class Conversion
   
   def extract_words
     phone_keys = phone_number.chars.map{|n| @digit_to_chars[n] }
+    # Word minimum length should be 3
+    # Now create combinations of words with 3 to 7 characters
+    # These words need to intersect with dictionary words
+    
+    #Break array phone_keys in 2 arrays with minimum size 3
+    length = phone_number.length
+    i = 2
+    while i < length - 3  do # loop will run till i = 6
+      array1 = phone_keys[0..i] # array1 min length 3, max length 7
+      array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9]
+      binding.pry if i < 4
+    end
     binding.pry
   end
 end
