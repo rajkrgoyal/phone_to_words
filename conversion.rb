@@ -20,6 +20,7 @@ class Conversion
     File.foreach( "dictionary.txt" ) do |word|
       @dictionary << word.strip
     end
+    @correct_words = []
   end
 
   def valid_phone_number?
@@ -32,22 +33,8 @@ class Conversion
     return true if phone_number.length == 10
   end
   
-  def extract_words
-    phone_keys = phone_number.chars.map{|n| @digit_to_chars[n] }
-    # Word minimum length should be 3
-    # Now create combinations of words with 3 to 7 characters
-    # These words need to intersect with dictionary words
-    
-    #Break array phone_keys in 2 arrays with minimum size 3
-    length = phone_number.length
-    i = 2
-    
-    correct_words = []
-    while i < length - 3  do # loop will run till i = 6
-      phone_chars_array1 = phone_keys[0..i] # array1 min length 3, max length 7
-      phone_chars_array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9] #last loop with [6..9]
-      
-      # Now combile characters and create possible words.
+  def get_correct_words(phone_chars_array1, phone_chars_array2)
+    # Now combile characters and create possible words.
       possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
       possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
       
@@ -59,15 +46,66 @@ class Conversion
       # Output was like... [[["NOUN", "ONTO"], ["STRUCK"]], [["MOTOR", "NOUNS"], ["TRUCK", "USUAL"]]]
       # Making combinations from above output
       if !match_word1.empty? && !match_word2.empty?
-        binding.pry
-        correct_words << match_word1.product(match_word2)
+        @correct_words += match_word1.product(match_word2)
       end
+  end
+  
+  def get_correct_words_multi_array(phone_chars_array1, phone_chars_array2, phone_chars_array3)
+    # Now combile characters and create possible words.
+      possible_words_array1 = phone_chars_array1.shift.product(*phone_chars_array1).map(&:join)
+      possible_words_array2 = phone_chars_array2.shift.product(*phone_chars_array2).map(&:join)
+      possible_words_array3 = phone_chars_array3.shift.product(*phone_chars_array3).map(&:join)
+      
+      p "match word with 3 arrays..."
+      # Match / Intersection of possible words with @dictionary array
+      p match_word1 = possible_words_array1 & @dictionary
+      p match_word2 = possible_words_array2 & @dictionary
+      p match_word3 = possible_words_array3 & @dictionary
+      
+      # Making combinations from above output
+      if !match_word1.empty? && !match_word2.empty? && !match_word3.empty?
+        @correct_words += match_word1.product(match_word2).product(match_word3)
+      end
+  end
+  
+  def extract_words
+    phone_keys = phone_number.chars.map{|n| @digit_to_chars[n] }
+    # Word minimum length should be 3
+    # Here is how we can breack phone number characters
+    # 3+7, 4+6, 5+5, 6+4, 7+3, 10, 3+3+4, 3+4+3, 4+3+3
+    # For length 10
+    
+    # Now create combinations of words with 3 to 7 characters
+    # These words need to intersect with dictionary words
+    
+    # Break array phone_keys in 2 arrays with minimum size 3
+    length = phone_number.length
+    i = 2
+    
+    while i < length - 3  do # loop will run till i = 6
+      phone_chars_array1 = phone_keys[0..i] # array1 min length 3, max length 7
+      phone_chars_array2 = phone_keys[(i + 1)..(length-1)] # first time [3..9] #last loop with [6..9]
+      
+      get_correct_words(phone_chars_array1, phone_chars_array2)
       p "correct_words - "
-      p correct_words
-      binding.pry if i < 4
+      p @correct_words
+      #binding.pry if i < 4
       i += 1
     end
-    p correct_words
+    p @correct_words
+    binding.pry
+    # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
+    # 3+3+4
+    get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..5], phone_keys[6..9])
+    binding.pry
+    # 3+4+3
+    get_correct_words_multi_array(phone_keys[0..2], phone_keys[3..6], phone_keys[7..9])
+    binding.pry
+    # 4+3+3
+    get_correct_words_multi_array(phone_keys[0..3], phone_keys[4..6], phone_keys[7..9])
+    p @correct_words
+    p "============="
+    p @correct_words.uniq!
     binding.pry
   end
 end
