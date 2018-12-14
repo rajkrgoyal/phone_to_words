@@ -56,12 +56,18 @@ class Conversion
       p match_word1 = possible_words_array1 & @dictionary
       p match_word2 = possible_words_array2 & @dictionary
       
-      correct_words << [match_word1, match_word2] if !match_word1.empty? && !match_word2.empty?
+      # Output was like... [[["NOUN", "ONTO"], ["STRUCK"]], [["MOTOR", "NOUNS"], ["TRUCK", "USUAL"]]]
+      # Making combinations from above output
+      if !match_word1.empty? && !match_word2.empty?
+        binding.pry
+        correct_words << match_word1.product(match_word2)
+      end
       p "correct_words - "
       p correct_words
       binding.pry if i < 4
       i += 1
     end
+    p correct_words
     binding.pry
   end
 end
