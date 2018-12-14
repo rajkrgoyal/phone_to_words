@@ -31,12 +31,10 @@ class Conversion
   def get_correct_words(phone_chars_array)
     matches = []
     phone_chars_array.each do |phone_chars|
-      
       # Now combine characters and create possible words.
       possible_words = phone_chars.shift.product(*phone_chars).map(&:join)
       # Match / Intersection of possible words with @dictionary array
       matches << (possible_words & @dictionary)
-      #binding.pry
     end
 
     unless matches.any?(&:empty?)
@@ -69,7 +67,7 @@ class Conversion
     i = 2
     @phone_keys = @phone_number.chars.map { |n| @digit_to_chars[n] }
 
-    while i < length - 3 do # loop will run till i = 6
+    while i < (length - 3) # loop will run till i = 6
       phone_chars1 = @phone_keys[0..i]
       phone_chars2 = @phone_keys[(i + 1)..(length - 1)]
       get_correct_words([phone_chars1, phone_chars2])
@@ -84,20 +82,20 @@ class Conversion
     extract_words
     @correct_words << (@phone_keys.shift.product(*@phone_keys).map(&:join) & @dictionary).join(', ')
     @correct_words.uniq!
-    return @correct_words
+    @correct_words
   end
-  
+
   def number_to_multiple_combinations
     number_to_words_combinations
     # Fetch from combinations 3+3+4, 3+4+3, 4+3+3
     get_correct_words([@phone_keys[0..2], @phone_keys[3..5], @phone_keys[6..9]])
     get_correct_words([@phone_keys[0..2], @phone_keys[3..6], @phone_keys[7..9]])
     get_correct_words([@phone_keys[0..3], @phone_keys[4..6], @phone_keys[7..9]])
-    return @correct_words
+    @correct_words
   end
 end
 
 object = Conversion.new('6686787825')
 p object.number_to_words_combinations
-p "3 words combinations =================="
+p '3 words combinations =================='
 p object.number_to_multiple_combinations
