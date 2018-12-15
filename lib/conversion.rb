@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# require 'benchmark'
+require 'benchmark'
 require 'pry'
 
 # Convert phone number to meaningfull word(s) based on available dictionary.
@@ -37,19 +37,19 @@ class Conversion
       matches << (possible_words & @dictionary)
     end
 
-    unless matches.any?(&:empty?)
-      # Making combinations from above output
-      if matches.size == 2
-        @correct_words += matches[0].product(matches[1])
-      elsif matches.size == 3
-        @correct_words += matches[0].product(matches[1]).product(matches[2]).map(&:flatten)
-      end
+    return if matches.any?(&:empty?)
+
+    # Making combinations from above output
+    if matches.size == 2
+      @correct_words += matches[0].product(matches[1])
+    elsif matches.size == 3
+      @correct_words += matches[0].product(matches[1]).product(matches[2]).map(&:flatten)
     end
   end
 
   def parse_dictionary
     @dictionary = []
-    File.foreach('dictionary.txt') do |word|
+    File.foreach(Dir.pwd + '/data/dictionary.txt') do |word|
       @dictionary << word.strip
     end
   end
@@ -94,8 +94,3 @@ class Conversion
     @correct_words
   end
 end
-
-object = Conversion.new('6686787825')
-p object.number_to_words_combinations
-p '3 words combinations =================='
-p object.number_to_multiple_combinations
