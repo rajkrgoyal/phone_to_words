@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'benchmark'
-require 'pry'
-
 # Convert phone number to meaningfull word(s) based on available dictionary.
 # Meaningfull words help to remember phone number.
 class Conversion

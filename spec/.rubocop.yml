@@ -1,0 +1,12 @@
+AllCops:
+  TargetRubyVersion: 2.5.3
+Metrics/LineLength:
+  Max: 100
+Metrics/BlockLength:
+  Max: 75
+Layout/MultilineBlockLayout:
+  Enabled: false
+Style/BlockDelimiters:
+  Enabled: false
+Layout/BlockEndNewline:
+  Enabled: false
