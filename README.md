@@ -53,14 +53,7 @@ gem install bundler
 bundle install
 ```
 
-## Running the tests
-
-Please run command:
-
-```
-rspec spec/conversion_test.rb --format documentation
-```
-### Break down into end to end tests
+### Summary - Break down into end to end tests
 
 There are 2 methods that provide different solution. Both methods return different output. First one is according to requirement. Another solution is more detailed.
 
@@ -68,23 +61,23 @@ There are 2 methods that provide different solution. Both methods return differe
 
 ***More combinations of words*** - Another ****method - number_to_multiple_combinations**** return more precise array. it has more combinations than the requirement expectations. Return array has combination of 3 words as well. Example of return array can be seen in file spec/conversion_test.rb
 
-## Running the Puzzle
 
-Please copy following code at the end of lib/conversion.rb.
-
-````
-object = Conversion.new('6686787825')
-puts 'Result as expected in requirement - '
-p object.number_to_words_combinations
-
-p "Result with more combinations"
-p object.number_to_multiple_combinations
-
-````
+### Execution
 
 Please run command:
 
-```
-ruby lib/conversion.rb
-```
+
+- `rspec spec/conversion_test.rb --format documentation`
+- `ruby lib/benchmark1.rb`
+- `ruby lib/benchmark2.rb`
+
+
+### Program output.
+
+   ![](assets/images/result-1-with-time.png?raw=true)
+   ![](assets/images/result-2-with-time.png?raw=true)
+  
+### Test case output.
+
+   ![](assets/images/rspec.png)
 
