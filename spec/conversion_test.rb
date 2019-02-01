@@ -15,9 +15,7 @@ describe Conversion do
                                   %w[MUN PUP TAJ], %w[MUN PUR TAJ], %w[MUN PUS TAJ],
                                   %w[MUN SUP TAJ], %w[MUN SUQ TAJ], %w[NUN PUP TAJ],
                                   %w[NUN PUR TAJ], %w[NUN PUS TAJ], %w[NUN SUP TAJ],
-                                  %w[NUN SUQ TAJ], %w[MUM PUPU AL], %w[MUM RUST AL],
-                                  %w[MUN PUPU AL], %w[MUN RUST AL], %w[NUN PUPU AL],
-                                  %w[NUN RUST AL]] }
+                                  %w[NUN SUQ TAJ]] }
 
   let(:phone2) { '2282668687' }
   let(:result2_2words) { [%w[ACT AMOUNTS], %w[ACT CONTOUR], %w[BAT AMOUNTS],
@@ -34,16 +32,11 @@ describe Conversion do
                                   %w[BUB OOT NUS], %w[BUB OOT OUR], %w[CUB MOT MUS],
                                   %w[CUB MOT NUS], %w[CUB MOT OUR], %w[CUB NOT MUS],
                                   %w[CUB NOT NUS], %w[CUB NOT OUR], %w[CUB OOT MUS],
-                                  %w[CUB OOT NUS], %w[CUB OOT OUR], %w[AVA NOUN UP],
-                                  %w[AVA NOUN US], %w[AVA ONTO UP], %w[AVA ONTO US],
-                                  %w[BUB NOUN UP], %w[BUB NOUN US], %w[BUB ONTO UP],
-                                  %w[BUB ONTO US], %w[CUB NOUN UP], %w[CUB NOUN US],
-                                  %w[CUB ONTO UP], %w[CUB ONTO US], %w[BUBO MUM UP],
-                                  %w[BUBO MUM US], %w[BUBO MUN UP], %w[BUBO MUN US],
-                                  %w[BUBO NUN UP], %w[BUBO NUN US]] }
+                                  %w[CUB OOT NUS], %w[CUB OOT OUR]]}
 
   context 'Testing conversion of phone number to combinations of words ' do
     it 'Check valid phone number' do
+      puts 'Phone number - ' + phone1
       object = Conversion.new(phone1)
       expect(object.valid_phone_number?).to be(true)
     end
@@ -61,6 +54,7 @@ describe Conversion do
 
   context 'Testing conversion of phone number to combinations of words ' do
     it 'Check valid phone number' do
+      puts 'Phone number - ' + phone2
       object = Conversion.new(phone2)
       expect(object.valid_phone_number?).to be(true)
     end

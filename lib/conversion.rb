@@ -30,6 +30,10 @@ class Conversion
     phone_chars_array.each do |phone_chars|
       # Now combine characters and create possible words.
       possible_words = phone_chars.shift.product(*phone_chars).map(&:join)
+
+      # remove words with less than 3 chars
+      possible_words.reject! { |x| x.length < 3 }
+
       # Match / Intersection of possible words with @dictionary array
       matches << (possible_words & @dictionary)
     end
