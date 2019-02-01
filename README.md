@@ -6,12 +6,19 @@ With this we can generate numbers like 1-800-motortruck which is easier to remem
 The phone number mapping to letters is as follows:
 
 2 = a b c
+
 3 = d e f
+
 4 = g h i
+
 5 = j k l
+
 6 = m n o
+
 7 = p q r s
+
 8 = t u v
+
 9 = w x y z
  
 The phone numbers will never contain a 0 or 1. 
@@ -20,6 +27,7 @@ Words have to be at least 3 characters.
 To get give you an initial verification, the following must be true:
 
 6686787825 should return the following list [["motor", "usual"], ["noun", "struck"], ["nouns", "truck"], ["nouns", "usual"], ["onto", "struck"], "motortruck"]
+
 2282668687 should return the following list [["act", "amounts"], ["act", "contour"], ["acta", "mounts"], ["bat", "amounts"], ["bat", "contour"], ["cat", "contour"], "catamounts"]
 
 The conversion of a 10 digit phone number should be performed within 1000ms.
@@ -54,11 +62,11 @@ rspec spec/conversion_test.rb --format documentation
 ```
 ### Break down into end to end tests
 
-There are 2 methods to test code. Both methods return different output.
+There are 2 methods that provide different solution. Both methods return different output. First one is according to requirement. Another solution is more detailed.
 
-***As shown in requirement above*** - Method number_to_words_combinations return array as show in requirement. In result, it return single work or combinations of 2 words corresponding to a phone number. Result mataches as show in requirement.
+***As shown in requirement above*** - ****Method - number_to_words_combinations**** return array as show in requirement. In result, it return single word or combinations of 2 words corresponding to given phone number. Result matches as shown in requirement.
 
-***More combinations of words*** - Another method - number_to_multiple_combinations return more precise array. it has more combinations than the requirement expectations. Return array has combination of 3 words as well. Example of return array can be seen in file spec/conversion_test.rb
+***More combinations of words*** - Another ****method - number_to_multiple_combinations**** return more precise array. it has more combinations than the requirement expectations. Return array has combination of 3 words as well. Example of return array can be seen in file spec/conversion_test.rb
 
 ## Running the Puzzle
 
