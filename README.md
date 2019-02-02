@@ -53,23 +53,11 @@ gem install bundler
 bundle install
 ```
 
-### Summary - Break down into end to end tests
-
-There are 2 methods that provide different solution. Both methods return different output. First one is according to requirement. Another solution is more detailed.
-
-***As shown in requirement above*** - ****Method - number_to_words_combinations**** return array as show in requirement. In result, it return single word or combinations of 2 words corresponding to given phone number. Result matches as shown in requirement.
-
-***More combinations of words*** - Another ****method - number_to_multiple_combinations**** return more precise array. it has more combinations than the requirement expectations. Return array has combination of 3 words as well. Example of return array can be seen in file spec/conversion_test.rb
-
-
 ### Execution
 
-Please run command:
-
-
 - `rspec spec/conversion_test.rb --format documentation`
-- `ruby lib/benchmark1.rb`
-- `ruby lib/benchmark2.rb`
+- `time ruby lib/benchmark1.rb`
+- `time ruby lib/benchmark2.rb`
 
 
 ### Program output.
