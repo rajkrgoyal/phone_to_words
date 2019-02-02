@@ -92,6 +92,7 @@ class Conversion
     get_correct_words([@phone_keys[0..2], @phone_keys[3..5], @phone_keys[6..9]])
     get_correct_words([@phone_keys[0..2], @phone_keys[3..6], @phone_keys[7..9]])
     get_correct_words([@phone_keys[0..3], @phone_keys[4..6], @phone_keys[7..9]])
+    @correct_words.reject! { |x| x.join.length < 10 if x.is_a?(Array) || x.length < 10 }
     @correct_words
   end
 end
