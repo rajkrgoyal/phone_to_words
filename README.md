@@ -56,14 +56,12 @@ bundle install
 ### Execution
 
 - `rspec spec/conversion_test.rb --format documentation`
-- `time ruby lib/benchmark1.rb`
-- `time ruby lib/benchmark2.rb`
+- `time ruby lib/benchmark.rb`
 
 
 ### Program output.
 
-   ![](assets/images/result-1-with-time.png?raw=true)
-   ![](assets/images/result-2-with-time.png?raw=true)
+   ![](assets/images/result-with-benchmark.png?raw=true)
   
 ### Test case output.
 
